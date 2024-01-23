@@ -45,11 +45,6 @@ fun date_to_string (date : int*int*int) =
      in get_nth(months, (#2 date)) ^ " " ^ (Int.toString (#3 date)) ^ ", " ^ (Int.toString (#1 date))
      end
 
-(* Write a function number_before_reaching_sum that takes an int called sum, which you can assume
-is positive, and an int list, which you can assume contains all positive numbers, and returns an int.
-You should return an int n such that the first n elements of the list add to less than sum, but the first
-n + 1 elements of the list add to sum or more. Assume the entire list sums to more than the passed in
-value; it is okay for an exception to occur if this is not the case. *)
 
 fun number_before_reaching_sum (sum: int, input: int list) = 
      let  
@@ -57,5 +52,21 @@ fun number_before_reaching_sum (sum: int, input: int list) =
       if (sum - (hd input) <= 0)
           then indx
           else find_indx ((sum - (hd input)), (tl input), (indx + 1))
-     in find_indx(sum, input, 1)
+     in find_indx(sum, input, 0)
      end
+
+fun what_month (day: int) = 
+     let val month_lenghts = [31, 28, 31, 30, 31, 30, 31, 31,30,31,30,31]
+     in number_before_reaching_sum(day, month_lenghts) + 1
+     end
+
+(* Write a function month_range that takes two days of the year day1 and day2 and returns an int list
+[m1,m2,...,mn] where m1 is the month of day1, m2 is the month of day1+1, ..., and mn is the month
+of day day2. Note the result will have length day2 - day1 + 1 or length 0 if day1>day2. *)
+
+fun month_range (day1: int, day2: int) = 
+     if day1 > day2
+     then []
+     else what_month(day1) :: month_range((day1+1), day2)
+
+           
