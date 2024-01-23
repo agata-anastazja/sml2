@@ -60,13 +60,22 @@ fun what_month (day: int) =
      in number_before_reaching_sum(day, month_lenghts) + 1
      end
 
-(* Write a function month_range that takes two days of the year day1 and day2 and returns an int list
-[m1,m2,...,mn] where m1 is the month of day1, m2 is the month of day1+1, ..., and mn is the month
-of day day2. Note the result will have length day2 - day1 + 1 or length 0 if day1>day2. *)
-
 fun month_range (day1: int, day2: int) = 
      if day1 > day2
      then []
      else what_month(day1) :: month_range((day1+1), day2)
 
-           
+fun oldest(dates: (int*int*int) list) = 
+     if null dates
+     then NONE
+     else  let fun min_nonempty (dates: (int*int*int) list) = 
+                    if null (tl dates)
+                    then hd dates 
+                    else let val tl_ans = min_nonempty(tl dates)
+                         in 
+                         if is_older((hd dates), tl_ans)
+                         then hd dates
+                         else tl_ans
+                         end
+          in SOME (min_nonempty dates)
+          end
