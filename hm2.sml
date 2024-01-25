@@ -24,6 +24,16 @@ fun get_substitutions1 (l1, s1) =
                     NONE => get_substitutions1(xs', s1)
                     | SOME ls => ls @ get_substitutions1(xs', s1)
 
+fun get_substitutions2 (l1, s1) =
+    let fun get_substitutions_rec (l1, s1, acc) = 
+        case l1 of
+        [] => [] @ acc
+        | x::xs' => case all_except_option(s1,x ) of
+                    NONE => get_substitutions_rec(xs', s1, acc)
+                    | SOME ls => get_substitutions_rec(xs', s1, (acc @ ls))
+    in get_substitutions_rec(l1, s1, [])
+    end
+
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
 datatype suit = Clubs | Diamonds | Hearts | Spades
