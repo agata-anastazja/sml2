@@ -70,27 +70,13 @@ fun card_value(x,y) =
     | Ace => 11
     | _ => 10
 
-(*  Write a function remove_card, which takes a list of cards cs, a card c, and an exception e. It returns a
-list that has all the elements of cs except c. If c is in the list more than once, remove only the first one.
-If c is not in the list, raise the exception e. You can compare cards with =. *)
 
 
 fun remove_card (cs, c, e) = 
-    let fun hand_without_card (cs, c) = 
-           ( case cs of 
-            [] => NONE
-            | x::xs' => if x = c 
-                        then SOME xs'
-                        else case hand_without_card(xs', c) of 
-                            NONE => NONE
-                            | SOME ls => SOME (x::ls))
-    in (case hand_without_card(cs, c) of 
-        NONE => raise e 
-        | SOME ls => ls)
-
-    end
-
-
-(* remove_card ([(Hearts, Ace), (Hearts, Ace)], (Hearts, Ace), IllegalMove) 
-remove_card ([], (Hearts, Ace), IllegalMove)  *)
-
+    case cs of 
+        [] => raise e
+        | x::xs' => if x = c 
+                    then xs'
+                    else (case remove_card(xs', c, e) of 
+                            [] => raise e
+                            |ls => (x::ls))
