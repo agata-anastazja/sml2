@@ -78,5 +78,4 @@ fun remove_card (cs, c, e) =
         | x::xs' => if x = c 
                     then xs'
                     else (case remove_card(xs', c, e) of 
-                            [] => raise e
-                            |ls => (x::ls))
+                            ls => (x::ls))
