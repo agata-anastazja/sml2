@@ -85,3 +85,13 @@ fun all_same_color(cards) =
     [] => true
     | _ :: [] => true 
     | head :: (neck :: rest) => (card_color head = card_color neck andalso all_same_color (neck :: rest))
+
+fun sum_cards (cards) = 
+    let fun get_values(cards, acc) = 
+            case cards of 
+            [] => 0 + acc
+            | x::[] => card_value(x) + acc
+            | x::xs' => get_values(xs', (card_value(x) + acc))
+            
+    in get_values(cards, 0)
+    end
