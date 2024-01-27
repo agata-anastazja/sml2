@@ -79,3 +79,9 @@ fun remove_card (cs, c, e) =
                     then xs'
                     else (case remove_card(xs', c, e) of 
                             ls => (x::ls))
+
+fun all_same_color(cards) = 
+    case cards of
+    [] => true
+    | _ :: [] => true 
+    | head :: (neck :: rest) => (card_color head = card_color neck andalso all_same_color (neck :: rest))
