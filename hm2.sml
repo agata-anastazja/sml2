@@ -54,7 +54,6 @@ datatype color = Red | Black
 datatype move = Discard of card | Draw 
 
 exception IllegalMove
-exception IllegalCard
 
 
 fun card_color (x,y) = 
@@ -107,4 +106,19 @@ fun score (held_cards, goal) =
         | (true, _) => potential_score
         | (_, true) => potential_score_2 div 2
         | _ => potential_score_2
+    end
+
+
+fun officiate (card_list, move_list, goal) = 
+    let fun make_moves(card_list, moves, held_cards) = 
+            case moves of 
+                [] => []
+                | x::xs' => (case (x, card_list) of
+                                (Draw, []) => held_cards
+                                | (Draw, y::ys') => if ((score ( y::held_cards, goal)) > goal)
+                                                    then (y::held_cards)
+                                                    else make_moves(ys', xs', (y::held_cards))
+                                | (Discard card, y) => make_moves(y, xs', (remove_card(held_cards, card, IllegalMove))))
+        val held_cards = make_moves(card_list, move_list, [])
+    in score(held_cards, goal)
     end
