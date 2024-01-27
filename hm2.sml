@@ -95,3 +95,16 @@ fun sum_cards (cards) =
             
     in get_values(cards, 0)
     end
+
+
+fun score (held_cards, goal) = 
+    let val sum = sum_cards(held_cards)
+        val same_color = all_same_color(held_cards)
+        val potential_score = (sum - goal) * 3
+        val potential_score_2 = goal - sum
+    in case ((sum > goal), same_color) of
+        (true, true) => potential_score div 2
+        | (true, _) => potential_score
+        | (_, true) => potential_score_2 div 2
+        | _ => potential_score_2
+    end
