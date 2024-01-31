@@ -14,17 +14,6 @@ datatype valu = Const of int
 	      | Tuple of valu list
 	      | Constructor of string * valu
 
-fun g f1 f2 p =
-    let 
-	val r = g f1 f2 
-    in
-	case p of
-	    Wildcard          => f1 ()
-	  | Variable x        => f2 x
-	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
-	  | ConstructorP(_,p) => r p
-	  | _                 => 0
-    end
 
 
 (**** you can put all your code here ****)
@@ -55,3 +44,32 @@ fun first_answer f = fn list =>
     | x::xs' => (case f x of
                  SOME m => m
                  | NONE => first_answer f xs')
+
+fun all_answers f = fn list => 
+    let fun some_answers (f, list, acc) = 
+            case list of
+            [] => NONE
+            | x::[] => (case f x of
+                            NONE => NONE 
+                            | SOME m => SOME (m @ acc))
+            | x::xs' => (case f x of
+                            NONE => NONE 
+                            | SOME m => some_answers (f, xs', (m @ acc)))
+    in some_answers(f, list, [])
+    end
+
+fun g f1 f2 p =
+    let 
+	val r = g f1 f2 
+    in
+	case p of
+	    Wildcard          => f1 ()
+	  | Variable x        => f2 x
+	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
+	  | ConstructorP(_,p) => r p
+	  | _                 => 0
+    end
+
+val count_wildcards = g (fn() => 1) (fn(_)=> 0)
+
+val count_wild_and_variable_lengths = g (fn() => 1) (fn(x) => (String.size x))
