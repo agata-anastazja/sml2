@@ -73,3 +73,21 @@ fun g f1 f2 p =
 val count_wildcards = g (fn() => 1) (fn(_)=> 0)
 
 val count_wild_and_variable_lengths = g (fn() => 1) (fn(x) => (String.size x))
+
+val count_some_var = fn (str, p) => g (fn()=> 0) (fn(x) => (if x = str then 1 else 0)) p
+
+
+val check_pat = fn p =>
+    let fun get_values (pattern, acc) = 
+            case pattern of
+                Variable x          => x::acc
+                | TupleP ps         => List.foldl (fn (p, i) => (get_values(p, i)  )) [] ps
+                | ConstructorP(_,p) => get_values (p, acc) @ acc 
+                | _                 => acc
+        fun repetitions_exsist (list) = 
+            case list of 
+            [] => false
+            | x::xs' => (List.exists (fn(y) => y = x) xs') orelse repetitions_exsist(xs')
+    in  
+        not (repetitions_exsist (get_values (p, [])))
+    end 
