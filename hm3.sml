@@ -91,3 +91,37 @@ val check_pat = fn p =>
     in  
         not (repetitions_exsist (get_values (p, [])))
     end 
+
+(*  Write a function match that takes a valu * pattern and returns a (string * valu) list option,
+namely NONE if the pattern does not match and 
+SOME lst where lst is the list of bindings if it does.
+Note that if the value matches but the pattern has no patterns of the form Variable s, then the result
+is SOME []. 
+
+Hints: Sample solution has one case expression with 7 branches. 
+The branch for tuples
+uses all_answers and ListPair.zip. Sample solution is 13 lines.
+ Remember to look above for the rules for what patterns match what values, and what bindings they produce. These are hints: We are
+not requiring all_answers and ListPair.zip here, but they make it easier. *)
+(* match (Const(1), ConstP 1) *)
+fun match (valu, pattern) = 
+    case (valu, pattern) of
+        (_, Variable x) =>  SOME [(x, valu)] 
+        | (Unit, UnitP)  => SOME []
+        | (_, Wildcard) => SOME []
+        | (Const x, ConstP y) => if x = y then SOME [] else NONE
+        | (Tuple ys, TupleP ps) => if List.length(ys) = List.length(ps)
+                                        then let fun check_tuple (list_of_pairs) = 
+                                                    all_answers match list_of_pairs
+                                                in check_tuple(ListPair.zip(ys, ps))
+                                                end
+                                        else NONE
+        | (Constructor(s2,v), ConstructorP(s1,p)) =>   NONE
+        | _ => NONE
+(* (ListPair.zip(ys, ps)) *)
+(* match (Const(1), ConstP 1) *)
+
+(* match (Tuple [Const(1), Const(1)], ConstP 1) *)
+match (Tuple [Const(1), Const(1)], TupleP [ConstP 1, ConstP 1])
+
+match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"])
