@@ -116,12 +116,12 @@ fun match (valu, pattern) =
                                                 in check_tuple(ListPair.zip(ys, ps))
                                                 end
                                         else NONE
-        | (Constructor(s2,v), ConstructorP(s1,p)) =>   NONE
+        | (Constructor (s1, v), ConstructorP (s2, p)) => NONE
         | _ => NONE
 (* (ListPair.zip(ys, ps)) *)
 (* match (Const(1), ConstP 1) *)
 
-(* match (Tuple [Const(1), Const(1)], ConstP 1) *)
+(* match (Tuple [Const(1), Const(1)], ConstP 1)
 match (Tuple [Const(1), Const(1)], TupleP [ConstP 1, ConstP 1])
 
-match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"])
+match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"]) *)
