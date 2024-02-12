@@ -104,6 +104,8 @@ uses all_answers and ListPair.zip. Sample solution is 13 lines.
  Remember to look above for the rules for what patterns match what values, and what bindings they produce. These are hints: We are
 not requiring all_answers and ListPair.zip here, but they make it easier. *)
 (* match (Const(1), ConstP 1) *)
+(* SOME (x, 3)
+ConstructorP ("SOME", TupleP [Variable "x", ConstP 3]) *)
 fun match (valu, pattern) = 
     case (valu, pattern) of
         (_, Variable x) =>  SOME [(x, valu)] 
@@ -116,7 +118,7 @@ fun match (valu, pattern) =
                                                 in check_tuple(ListPair.zip(ys, ps))
                                                 end
                                         else NONE
-        | (Constructor (s1, v), ConstructorP (s2, p)) => NONE
+        | (Constructor (s1, v), ConstructorP (s2, p)) => if s1 = s2 then match(v,p) else NONE
         | _ => NONE
 (* (ListPair.zip(ys, ps)) *)
 (* match (Const(1), ConstP 1) *)
@@ -124,4 +126,6 @@ fun match (valu, pattern) =
 (* match (Tuple [Const(1), Const(1)], ConstP 1)
 match (Tuple [Const(1), Const(1)], TupleP [ConstP 1, ConstP 1])
 
-match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"]) *)
+match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"]) 
+match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"])
+ match (Constructor ("SOME", Tuple [Const(1), Const(3)]),ConstructorP ("SOME", TupleP [Variable "x", ConstP 3])) *)
