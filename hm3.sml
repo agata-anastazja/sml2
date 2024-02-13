@@ -92,20 +92,6 @@ val check_pat = fn p =>
         not (repetitions_exsist (get_values (p, [])))
     end 
 
-(*  Write a function match that takes a valu * pattern and returns a (string * valu) list option,
-namely NONE if the pattern does not match and 
-SOME lst where lst is the list of bindings if it does.
-Note that if the value matches but the pattern has no patterns of the form Variable s, then the result
-is SOME []. 
-
-Hints: Sample solution has one case expression with 7 branches. 
-The branch for tuples
-uses all_answers and ListPair.zip. Sample solution is 13 lines.
- Remember to look above for the rules for what patterns match what values, and what bindings they produce. These are hints: We are
-not requiring all_answers and ListPair.zip here, but they make it easier. *)
-(* match (Const(1), ConstP 1) *)
-(* SOME (x, 3)
-ConstructorP ("SOME", TupleP [Variable "x", ConstP 3]) *)
 fun match (valu, pattern) = 
     case (valu, pattern) of
         (_, Variable x) =>  SOME [(x, valu)] 
@@ -128,4 +114,10 @@ match (Tuple [Const(1), Const(1)], TupleP [ConstP 1, ConstP 1])
 
 match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"]) 
 match (Tuple [Const(1), Const(1), Const(3)], TupleP [ConstP 1, ConstP 1, Variable "z"])
- match (Constructor ("SOME", Tuple [Const(1), Const(3)]),ConstructorP ("SOME", TupleP [Variable "x", ConstP 3])) *)
+ match (Constructor ("SOME", Tuple [Const(1), Const(3)]),ConstructorP ("SOME", TupleP [Variable "x", ConstP 3]))
+  match (Constructor ("SOME", Tuple [Const(1), Const(3)]),ConstructorP ("SOME", TupleP [Variable "x", ConstP 1]));
+  *)
+
+fun first_match v = fn pattern_list =>
+    SOME (first_answer (fn p => match (v, p)) pattern_list)
+    handle NoAnswer => NONE 
